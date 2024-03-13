@@ -21,7 +21,7 @@ def calc_PF1_PF2(eta,N,deltax,deltat,tf,Vol_Omega,Mat_smart_for_kqql,index_mea,D
     y = np.linspace(0,1,N);
     xx, yy = np.meshgrid(x,y)
     taux_conv_1 = 0.05      #From the previous step we need less than 5% of changes (relative)
-    taux_conv_2 = 0.00001      #From the previous step we need less than 5% of changes (absolute)
+    taux_conv_2 = 0.001      #From the previous step we need less than 5% of changes (absolute)
     #First (PF1)
     KqqL1 = np.zeros((N*N,Ntime))
     KqqL2 = np.zeros((N*N,Ntime))
@@ -32,7 +32,7 @@ def calc_PF1_PF2(eta,N,deltax,deltat,tf,Vol_Omega,Mat_smart_for_kqql,index_mea,D
     L2_all_time = np.zeros((N*N,Ntime))
 
     #boucle itérative 
-    for iter_count in range(1,20):
+    for iter_count in range(1,100):
         print('\t','\t','boucle numéro ',iter_count)
         #To check if convergence
         A_prev = A_all_time

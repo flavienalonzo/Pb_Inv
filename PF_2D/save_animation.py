@@ -50,6 +50,7 @@ def save_animation(Variable_all_time,nom_var):
     def animate(i, zList, plot):
         # setting data to new scatter coordinates
         ax.clear()
+        ax.set_zlim3d([np.min(Variable_all_time), np.max(Variable_all_time)])
         return ax.plot_surface(xx, yy, zList[i], cmap=cm.coolwarm)
         
         #surf._offsets3d = (xx, yy, zList[i])

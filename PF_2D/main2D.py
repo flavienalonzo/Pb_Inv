@@ -43,7 +43,7 @@ from graphique import *
 
 # On travaille sur le carré [0,1]*[0,1] entre t0 et tf:
 ##Espace : 
-N = 11;
+N = 21;
 x = np.linspace(0,1,N); deltax = 1/(N-1);
 y = np.linspace(0,1,N);
 xx, yy = np.meshgrid(x,y)
@@ -59,7 +59,7 @@ Coef_d = 23.23;    Coef_d_real = 20;
 Coef_mu = 26.75;   Coef_mu_real = 30;
 
 #Hyperparamètres : 
-sigma_eps = 0.1
+sigma_eps = 10.0
 sigma_a = 0.0001
 sigma_q = 0.0001
 lb = np.array([15,25])
@@ -67,18 +67,18 @@ ub = np.array([25,35])
 
 #Conditions initiales : 
 
-A0 = 9.9338+0.01*(np.cos(2*np.pi*xx)+np.sin(2*np.pi*xx))
-B0 = 9.2892+0.01*(np.cos(2*np.pi*xx)+np.sin(2*np.pi*xx))
+A0 = 9.9338+0.01*(np.cos(np.pi*xx)*np.cos(np.pi*yy))
+B0 = 9.2892+0.01*(np.cos(np.pi*xx)*np.cos(np.pi*yy))
 
 A0_vec = A0.reshape(-1)
 B0_vec = B0.reshape(-1)
 
-# fig = plt.figure(figsize=plt.figaspect(0.5))
-# ax = fig.add_subplot(1, 2, 1, projection='3d')
-# surf = ax.plot_surface(xx, yy, A0)
-# ax = fig.add_subplot(1, 2, 2, projection='3d')
-# surf = ax.plot_surface(xx, yy, B0)
-# plt.show()
+fig = plt.figure(figsize=plt.figaspect(0.5))
+ax = fig.add_subplot(1, 2, 1, projection='3d')
+surf = ax.plot_surface(xx, yy, A0)
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+surf = ax.plot_surface(xx, yy, B0)
+plt.show()
 
 #Création de la matrice discrète du laplacien en 2D
 ##On met la structure avec des conditions aux bords cycliques ce qui marche avec du Neumann homogène
@@ -99,7 +99,7 @@ Mat_smart_for_kqql = np.minimum(vec_time,np.transpose(vec_time))
 # Fabrication des données :
 KqqL1 = np.zeros((N*N,Ntime))#.reshape(-1)
 KqqL2 = np.zeros((N*N,Ntime))#.reshape(-1)
-N_mea = 10
+N_mea = 20
 Mat_Lap_for_B_corrected = sp.sparse.eye(N*N) + Coef_d_real*deltat/(deltax**2)*Mat_Lap
 (A_all_time,B_all_time) = calc_PF1(A0_vec,B0_vec,deltax,N,deltat,tf,Coef_mu_real,Coef_d_real,Mat_Lap,KqqL1,KqqL2)
 print('Données done')
@@ -119,17 +119,17 @@ D_mea_B = B_all_time[:,index_mea]
 
 # (A_all_time,B_all_time) = calc_PF1(A0_vec,B0_vec,N,deltat,tf,Coef_mu,Mat_Lap_for_A_csc,KqqL1,Mat_Lap_for_B_csc,KqqL2)
 # print('PF1 done')
-# # A_tf = A_next_vec.reshape((N,N))
-# # B_tf = B_next_vec.reshape((N,N))
-# # A_tf = A_all_time[:,-1].reshape((N,N))
-# # B_tf = B_all_time[:,-1].reshape((N,N))
+# A_tf = A_next_vec.reshape((N,N))
+# B_tf = B_next_vec.reshape((N,N))
+A_tf = A_all_time[:,-1].reshape((N,N))
+B_tf = B_all_time[:,-1].reshape((N,N))
 
-# # fig = plt.figure(figsize=plt.figaspect(0.5))
-# # ax = fig.add_subplot(1, 2, 1, projection='3d')
-# # surf = ax.plot_surface(xx, yy, A_tf)
-# # ax = fig.add_subplot(1, 2, 2, projection='3d')
-# # surf = ax.plot_surface(xx, yy, B_tf)
-# # plt.show()
+fig = plt.figure(figsize=plt.figaspect(0.5))
+ax = fig.add_subplot(1, 2, 1, projection='3d')
+surf = ax.plot_surface(xx, yy, A_tf)
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+surf = ax.plot_surface(xx, yy, B_tf)
+plt.show()
 
 # # Première résolution de (PF2) :
     
@@ -166,4 +166,4 @@ all_eta,A_final,B_final,L1_final,L2_final = Methode_NP_proj(lb,ub,eta_0,N,deltax
 # print('Sauvegarde de L2_eta')
 # save_animation(L2_final,'L2_final')
 #%% 
-graphique(A_exact,B_exact,A_eta,B_eta,L1_eta,L2_eta,all_eta,A_final,B_final,L1_final,L2_final,tf)
+graphique(A_exact,B_exact,A_eta,B_eta,L1_eta,L2_eta,all_eta,A_final,B_final,L1_final,L2_final,tf,N)

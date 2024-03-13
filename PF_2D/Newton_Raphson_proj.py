@@ -19,7 +19,7 @@ from calc_PF1_and_PF2_for_eta_known import *
 def Methode_NP_proj(lb,ub,eta_0,N,deltax,deltat,tf,Vol_Omega,Mat_Lap_for_A,Mat_Lap_for_B,Mat_smart_for_kqql,index_mea,D_mea_A,D_mea_B,sigma_eps,sigma_q,sigma_a,Mat_Lap,A0_vec,B0_vec):
     #First A,B,L1,L2
     f = lambda eta : calc_PF1_PF2(eta,N,deltax,deltat,tf,Vol_Omega,Mat_smart_for_kqql,index_mea,D_mea_A,D_mea_B,sigma_eps,sigma_q,sigma_a,Mat_Lap,A0_vec,B0_vec)
-    h = 0.0001
+    h = 0.001
     n_eta = len(eta_0)
     eta = eta_0
     all_eta = eta_0.reshape((n_eta,1))
@@ -53,7 +53,7 @@ def Methode_NP_proj(lb,ub,eta_0,N,deltax,deltat,tf,Vol_Omega,Mat_Lap_for_A,Mat_L
         new_eta_proj = calc_proj(lb,ub,new_eta)
         
         all_eta=np.append(all_eta,new_eta_proj.reshape((n_eta,1)),axis=1)
-        if (np.linalg.norm(new_eta_proj-eta,ord=2)<0.05*np.linalg.norm(eta,ord=2) and np.linalg.norm(new_eta_proj-eta,ord=2)<0.01):
+        if (np.linalg.norm(new_eta_proj-eta,ord=2)<0.05*np.linalg.norm(eta,ord=2) and np.linalg.norm(new_eta_proj-eta,ord=2)<0.05):
             print('conv',np.linalg.norm(new_eta_proj-eta,ord=2),np.linalg.norm(eta,ord=2))
             return all_eta,A_eta,B_eta,L1_eta,L2_eta
         print('\t','\t','Après la projection : ',new_eta_proj)
